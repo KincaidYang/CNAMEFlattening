@@ -10,20 +10,20 @@ from tencentcloud.common.profile.http_profile import HttpProfile
 from tencentcloud.common.exception.tencent_cloud_sdk_exception import TencentCloudSDKException
 from tencentcloud.dnspod.v20210323 import dnspod_client, models
 # 配置参数
-# domanin替换为自己的域名
+# domanin替换为自己的域名，如'r2wind.cn'
 domain='xxx.cn'
-# sub_domain替换为自己的子域名
+# sub_domain替换为自己的子域名，如'@'或'www'
 subdomain='xxx'
-# CDNCNAME请替换为CDN提供的CNAME地址
+# CDNCNAME请替换为CDN提供的CNAME地址，如'r2wind.cn.cdn.dnsv1.com'
 CDNCNAME='xxx.xxx.xxx.cn'
-# SecretId请替换为自己的腾讯云SecretId
+# SecretId请替换为自己的腾讯云SecretId，可前往https://console.cloud.tencent.com/cam/capi获取
 SecretId='xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
-# SecretKey请替换为自己的腾讯云SecretKey
+# SecretKey请替换为自己的腾讯云SecretKey，可前往https://console.cloud.tencent.com/cam/capi获取
 SecretKey='xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
-# URL为 DNSPod DOH接口地址，用以获取CDN实时解析情况，可自行替换
+# URL为 DNSPod DOH接口地址，用以获取CDN实时解析情况，可自行替换为其他厂商的DoH接口
 DoH='https://1.12.12.12/resolve'
 # 记录类型("A"为IPv4，"AAAA"为IPv6)
-record_type='A'
+record_type='AAAA'
 # 使用各省运营商 DNSIP，以确保可以正常使用 ECS 协议调度
 # 东北
 DNS_LIAONING_CU='202.96.64.68'
