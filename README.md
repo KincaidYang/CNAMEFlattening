@@ -1,4 +1,4 @@
-# DNSPod-CNAMEFlattening
+# CNAMEFlattening
 ## 相关说明
 本脚本用以拉平 CNAME 记录，当前仅支持 DNSPod
 
