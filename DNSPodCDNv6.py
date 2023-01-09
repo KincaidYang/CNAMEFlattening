@@ -20,8 +20,8 @@ CDNCNAME='xxx.xxx.xxx.cn'
 SecretId='xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
 # SecretKey请替换为自己的腾讯云SecretKey，可前往https://console.cloud.tencent.com/cam/capi获取
 SecretKey='xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
-# URL为 DNSPod DOH接口地址，用以获取CDN实时解析情况，可自行替换为其他厂商的DoH接口
-DoH='https://1.12.12.12/resolve'
+# URL为 DNSPod DOH接口地址，用以获取CDN实时解析情况，可自行替换为其他厂商的DoH接口(DNSPod DoH对IPv6支持存在问题，暂时替换为阿里）
+DoH='https://dns.alidns.com/resolve'
 # 记录类型("A"为IPv4，"AAAA"为IPv6)
 record_type='AAAA'
 # 使用各省运营商 DNSIP，以确保可以正常使用 ECS 协议调度
