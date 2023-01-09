@@ -23,7 +23,7 @@ SecretKey='xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
 # URL为 DNSPod DOH接口地址，用以获取CDN实时解析情况，可自行替换为其他厂商的DoH接口
 DoH='https://1.12.12.12/resolve'
 # 记录类型("A"为IPv4，"AAAA"为IPv6)
-record_type='AAAA'
+record_type='A'
 # 使用各省运营商 DNSIP，以确保可以正常使用 ECS 协议调度
 # 东北
 DNS_LIAONING_CU='202.96.64.68'
