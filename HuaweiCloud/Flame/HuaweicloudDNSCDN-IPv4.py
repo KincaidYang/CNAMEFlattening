@@ -160,7 +160,7 @@ if __name__ == "__main__":
     result_ZONE_ID = json.dumps(resp_zone_id.to_json_object())
     result_ZONE_ID_json = json.loads(result_ZONE_ID)
     zone_id = result_ZONE_ID_json['zones'][0]['id']
-    # 获取 CDN 调度结果并将调度结果推送到 DNSPod
+    # 获取 CDN 调度结果并将调度结果推送到 Huawei
     # 华北
     # 北京
     # 北京电信
