@@ -21,7 +21,7 @@ if __name__ == '__main__':
     SecretId=''
     # SecretKey请替换为自己的腾讯云SecretKey
     SecretKey=''
-    # URL为 DNSPod DOH接口地址，用以获取CDN实时解析情况，可自行替换
+    # URL为 DNSPod DOH接口地址，用以获取CDN实时解析情况，可自行替换（由于DNSPod支持IPv6存在问题，暂时替换为阿里）
     DoH='https://dns.alidns.com/resolve'
     # 记录类型("A"为IPv4，"AAAA"为IPv6)
     record_type='AAAA'
