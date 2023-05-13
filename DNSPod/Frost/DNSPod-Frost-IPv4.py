@@ -16,7 +16,7 @@ if __name__ == '__main__':
     # sub_domain替换为自己的子域名
     subdomain='@'
     # CDNCNAME请替换为CDN提供的CNAME地址
-    CDNCNAME='r2wind.cn.eo.dnse3.com'
+    CDNCNAME=''
     # SecretId请替换为自己的腾讯云SecretId
     SecretId=''
     # SecretKey请替换为自己的腾讯云SecretKey
@@ -136,7 +136,7 @@ if __name__ == '__main__':
     print(LIAONING_CU_CDN.text)
     # 解析返回结果
     result_LIAONING_CU = json.loads(LIAONING_CU_CDN.text)
-    
+    # 考虑到 CDN 存在多级CNAME，故从第二个data开始取值，保险起见仅取两值
     ip1_LIAONING_CU= result_LIAONING_CU['Answer'][0]['data']
     # 获取辽宁联通记录ID
     try:
@@ -167,6 +167,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_LIAONING_CU1,
             "RecordType": record_type,
             "RecordLine": "辽宁联通",
@@ -183,7 +184,7 @@ if __name__ == '__main__':
     print(LIAONING_CT_CDN.text)
     # 解析返回结果
     result_LIAONING_CT = json.loads(LIAONING_CT_CDN.text)
-    
+    # 考虑到 CDN 存在多级CNAME，故从第二个data开始取值，保险起见仅取两值
     ip1_LIAONING_CT= result_LIAONING_CT['Answer'][0]['data']
     # 获取辽宁电信记录ID
     try:
@@ -208,6 +209,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_LIAONING_CT1,
             "RecordType": record_type,
             "RecordLine": "辽宁电信",
@@ -224,7 +226,7 @@ if __name__ == '__main__':
     print(LIAONING_CM_CDN.text)
     # 解析返回结果
     result_LIAONING_CM = json.loads(LIAONING_CM_CDN.text)
-    
+    # 考虑到 CDN 存在多级CNAME，故从第二个data开始取值，保险起见仅取两值
     ip1_LIAONING_CM= result_LIAONING_CM['Answer'][0]['data']
     # 获取辽宁移动记录ID
     try:
@@ -249,6 +251,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_LIAONING_CM1,
             "RecordType": record_type,
             "RecordLine": "辽宁移动",
@@ -265,7 +268,7 @@ if __name__ == '__main__':
     print(JILIN_CU_CDN.text)
     # 解析返回结果
     result_JILIN_CU = json.loads(JILIN_CU_CDN.text)
-    
+    # 考虑到 CDN 存在多级CNAME，故从第二个data开始取值，保险起见仅取两值
     ip1_JILIN_CU= result_JILIN_CU['Answer'][0]['data']
     # 获取吉林联通记录ID
     try:
@@ -290,6 +293,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_JILIN_CU1,
             "RecordType": record_type,
             "RecordLine": "吉林联通",
@@ -306,7 +310,7 @@ if __name__ == '__main__':
     print(JILIN_CT_CDN.text)
     # 解析返回结果
     result_JILIN_CT = json.loads(JILIN_CT_CDN.text)
-    
+    # 考虑到 CDN 存在多级CNAME，故从第二个data开始取值，保险起见仅取两值
     ip1_JILIN_CT= result_JILIN_CT['Answer'][0]['data']
     # 获取吉林电信记录ID
     try:
@@ -331,6 +335,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_JILIN_CT1,
             "RecordType": record_type,
             "RecordLine": "吉林电信",
@@ -347,7 +352,7 @@ if __name__ == '__main__':
     print(JILIN_CM_CDN.text)
     # 解析返回结果
     result_JILIN_CM = json.loads(JILIN_CM_CDN.text)
-    
+    # 考虑到 CDN 存在多级CNAME，故从第二个data开始取值，保险起见仅取两值
     ip1_JILIN_CM= result_JILIN_CM['Answer'][0]['data']
     # 获取吉林移动记录ID
     try:
@@ -372,6 +377,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_JILIN_CM1,
             "RecordType": record_type,
             "RecordLine": "吉林移动",
@@ -389,7 +395,7 @@ if __name__ == '__main__':
     print(HEILONGJIANG_CU_CDN.text)
     # 解析返回结果
     result_HEILONGJIANG_CU = json.loads(HEILONGJIANG_CU_CDN.text)
-    
+    # 考虑到 CDN 存在多级CNAME，故从第二个data开始取值，保险起见仅取两值
     ip1_HEILONGJIANG_CU= result_HEILONGJIANG_CU['Answer'][0]['data']
     # 获取黑龙江联通记录ID
     try:
@@ -414,6 +420,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_HEILONGJIANG_CU1,
             "RecordType": record_type,
             "RecordLine": "黑龙江联通",
@@ -430,7 +437,7 @@ if __name__ == '__main__':
     print(HEILONGJIANG_CT_CDN.text)
     # 解析返回结果
     result_HEILONGJIANG_CT = json.loads(HEILONGJIANG_CT_CDN.text)
-    
+    # 考虑到 CDN 存在多级CNAME，故从第二个data开始取值，保险起见仅取两值
     ip1_HEILONGJIANG_CT= result_HEILONGJIANG_CT['Answer'][0]['data']
     # 获取黑龙江电信记录ID
     try:
@@ -455,6 +462,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_HEILONGJIANG_CT1,
             "RecordType": record_type,
             "RecordLine": "黑龙江电信",
@@ -471,7 +479,7 @@ if __name__ == '__main__':
     print(HEILONGJIANG_CM_CDN.text)
     # 解析返回结果
     result_HEILONGJIANG_CM = json.loads(HEILONGJIANG_CM_CDN.text)
-    
+    # 考虑到 CDN 存在多级CNAME，故从第二个data开始取值，保险起见仅取两值
     ip1_HEILONGJIANG_CM= result_HEILONGJIANG_CM['Answer'][0]['data']
     # 获取黑龙江移动记录ID
     try:
@@ -496,6 +504,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_HEILONGJIANG_CM1,
             "RecordType": record_type,
             "RecordLine": "黑龙江移动",
@@ -513,7 +522,7 @@ if __name__ == '__main__':
     print(BEIJING_CU_CDN.text)
     # 解析返回结果
     result_BEIJING_CU = json.loads(BEIJING_CU_CDN.text)
-    
+    # 考虑到 CDN 存在多级CNAME，故从第二个data开始取值，保险起见仅取两值
     ip1_BEIJING_CU= result_BEIJING_CU['Answer'][0]['data']
     # 获取北京联通记录ID
     try:
@@ -538,6 +547,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_BEIJING_CU1,
             "RecordType": record_type,
             "RecordLine": "北京联通",
@@ -554,7 +564,7 @@ if __name__ == '__main__':
     print(BEIJING_CT_CDN.text)
     # 解析返回结果
     result_BEIJING_CT = json.loads(BEIJING_CT_CDN.text)
-    
+    # 考虑到 CDN 存在多级CNAME，故从第二个data开始取值，保险起见仅取两值
     ip1_BEIJING_CT= result_BEIJING_CT['Answer'][0]['data']
     # 获取北京电信记录ID
     try:
@@ -579,6 +589,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_BEIJING_CT1,
             "RecordType": record_type,
             "RecordLine": "北京电信",
@@ -595,7 +606,7 @@ if __name__ == '__main__':
     print(BEIJING_CM_CDN.text)
     # 解析返回结果
     result_BEIJING_CM = json.loads(BEIJING_CM_CDN.text)
-    
+    # 考虑到 CDN 存在多级CNAME，故从第二个data开始取值，保险起见仅取两值
     ip1_BEIJING_CM= result_BEIJING_CM['Answer'][0]['data']
     # 获取北京移动记录ID
     try:
@@ -620,6 +631,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_BEIJING_CM1,
             "RecordType": record_type,
             "RecordLine": "北京移动",
@@ -637,7 +649,7 @@ if __name__ == '__main__':
     print(TIANJIN_CU_CDN.text)
     # 解析返回结果
     result_TIANJIN_CU = json.loads(TIANJIN_CU_CDN.text)
-    
+    # 考虑到 CDN 存在多级CNAME，故从第二个data开始取值，保险起见仅取两值
     ip1_TIANJIN_CU= result_TIANJIN_CU['Answer'][0]['data']
     # 获取天津联通记录ID
     try:
@@ -662,6 +674,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_TIANJIN_CU1,
             "RecordType": record_type,
             "RecordLine": "天津联通",
@@ -678,7 +691,7 @@ if __name__ == '__main__':
     print(TIANJIN_CT_CDN.text)
     # 解析返回结果
     result_TIANJIN_CT = json.loads(TIANJIN_CT_CDN.text)
-    
+    # 考虑到 CDN 存在多级CNAME，故从第二个data开始取值，保险起见仅取两值
     ip1_TIANJIN_CT= result_TIANJIN_CT['Answer'][0]['data']
     # 获取天津电信记录ID
     try:
@@ -703,6 +716,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_TIANJIN_CT1,
             "RecordType": record_type,
             "RecordLine": "天津电信",
@@ -719,7 +733,7 @@ if __name__ == '__main__':
     print(TIANJIN_CM_CDN.text)
     # 解析返回结果
     result_TIANJIN_CM = json.loads(TIANJIN_CM_CDN.text)
-    
+    # 考虑到 CDN 存在多级CNAME，故从第二个data开始取值，保险起见仅取两值
     ip1_TIANJIN_CM= result_TIANJIN_CM['Answer'][0]['data']
     # 获取天津移动记录ID
     try:
@@ -744,6 +758,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_TIANJIN_CM1,
             "RecordType": record_type,
             "RecordLine": "天津移动",
@@ -785,6 +800,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_HEBEI_CU1,
             "RecordType": record_type,
             "RecordLine": "河北联通",
@@ -825,6 +841,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_HEBEI_CT1,
             "RecordType": record_type,
             "RecordLine": "河北电信",
@@ -865,6 +882,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_HEBEI_CM1,
             "RecordType": record_type,
             "RecordLine": "河北移动",
@@ -906,6 +924,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_SHANXI_CU1,
             "RecordType": record_type,
             "RecordLine": "山西联通",
@@ -946,6 +965,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_SHANXI_CT1,
             "RecordType": record_type,
             "RecordLine": "山西电信",
@@ -986,6 +1006,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_SHANXI_CM1,
             "RecordType": record_type,
             "RecordLine": "山西移动",
@@ -1027,6 +1048,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_NEIMENGGU_CU1,
             "RecordType": record_type,
             "RecordLine": "内蒙联通",
@@ -1067,6 +1089,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_NEIMENGGU_CT1,
             "RecordType": record_type,
             "RecordLine": "内蒙电信",
@@ -1107,6 +1130,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_NEIMENGGU_CM1,
             "RecordType": record_type,
             "RecordLine": "内蒙移动",
@@ -1148,6 +1172,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_GUANGDONG_CU1,
             "RecordType": record_type,
             "RecordLine": "广东联通",
@@ -1188,6 +1213,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_GUANGDONG_CT1,
             "RecordType": record_type,
             "RecordLine": "广东电信",
@@ -1228,6 +1254,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_GUANGDONG_CM1,
             "RecordType": record_type,
             "RecordLine": "广东移动",
@@ -1269,6 +1296,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_GUANGXI_CU1,
             "RecordType": record_type,
             "RecordLine": "广西联通",
@@ -1309,6 +1337,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_GUANGXI_CT1,
             "RecordType": record_type,
             "RecordLine": "广西电信",
@@ -1349,6 +1378,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_GUANGXI_CM1,
             "RecordType": record_type,
             "RecordLine": "广西移动",
@@ -1390,6 +1420,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_HAINAN_CU1,
             "RecordType": record_type,
             "RecordLine": "海南联通",
@@ -1430,6 +1461,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_HAINAN_CT1,
             "RecordType": record_type,
             "RecordLine": "海南电信",
@@ -1470,6 +1502,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_HAINAN_CM1,
             "RecordType": record_type,
             "RecordLine": "海南移动",
@@ -1511,6 +1544,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_FUJIAN_CU1,
             "RecordType": record_type,
             "RecordLine": "福建联通",
@@ -1551,6 +1585,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_FUJIAN_CT1,
             "RecordType": record_type,
             "RecordLine": "福建电信",
@@ -1591,6 +1626,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_FUJIAN_CM1,
             "RecordType": record_type,
             "RecordLine": "福建移动",
@@ -1632,6 +1668,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_SHANGHAI_CU1,
             "RecordType": record_type,
             "RecordLine": "上海联通",
@@ -1672,6 +1709,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_SHANGHAI_CT1,
             "RecordType": record_type,
             "RecordLine": "上海电信",
@@ -1712,6 +1750,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_SHANGHAI_CM1,
             "RecordType": record_type,
             "RecordLine": "上海移动",
@@ -1753,6 +1792,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_JIANGSU_CU1,
             "RecordType": record_type,
             "RecordLine": "江苏联通",
@@ -1793,6 +1833,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_JIANGSU_CT1,
             "RecordType": record_type,
             "RecordLine": "江苏电信",
@@ -1833,6 +1874,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_JIANGSU_CM1,
             "RecordType": record_type,
             "RecordLine": "江苏移动",
@@ -1874,6 +1916,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_ZHEJIANG_CU1,
             "RecordType": record_type,
             "RecordLine": "浙江联通",
@@ -1914,6 +1957,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_ZHEJIANG_CT1,
             "RecordType": record_type,
             "RecordLine": "浙江电信",
@@ -1954,6 +1998,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_ZHEJIANG_CM1,
             "RecordType": record_type,
             "RecordLine": "浙江移动",
@@ -1995,6 +2040,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_SHANDONG_CU1,
             "RecordType": record_type,
             "RecordLine": "山东联通",
@@ -2035,6 +2081,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_SHANDONG_CT1,
             "RecordType": record_type,
             "RecordLine": "山东电信",
@@ -2075,6 +2122,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_SHANDONG_CM1,
             "RecordType": record_type,
             "RecordLine": "山东移动",
@@ -2116,6 +2164,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_ANHUI_CU1,
             "RecordType": record_type,
             "RecordLine": "安徽联通",
@@ -2156,6 +2205,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_ANHUI_CT1,
             "RecordType": record_type,
             "RecordLine": "安徽电信",
@@ -2196,6 +2246,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_ANHUI_CM1,
             "RecordType": record_type,
             "RecordLine": "安徽移动",
@@ -2237,6 +2288,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_HUBEI_CU1,
             "RecordType": record_type,
             "RecordLine": "湖北联通",
@@ -2277,6 +2329,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_HUBEI_CT1,
             "RecordType": record_type,
             "RecordLine": "湖北电信",
@@ -2317,6 +2370,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_HUBEI_CM1,
             "RecordType": record_type,
             "RecordLine": "湖北移动",
@@ -2358,6 +2412,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_HUNAN_CU1,
             "RecordType": record_type,
             "RecordLine": "湖南联通",
@@ -2398,6 +2453,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_HUNAN_CT1,
             "RecordType": record_type,
             "RecordLine": "湖南电信",
@@ -2438,6 +2494,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_HUNAN_CM1,
             "RecordType": record_type,
             "RecordLine": "湖南移动",
@@ -2479,6 +2536,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_HENAN_CU1,
             "RecordType": record_type,
             "RecordLine": "河南联通",
@@ -2519,6 +2577,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_HENAN_CT1,
             "RecordType": record_type,
             "RecordLine": "河南电信",
@@ -2559,6 +2618,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_HENAN_CM1,
             "RecordType": record_type,
             "RecordLine": "河南移动",
@@ -2600,6 +2660,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_JIANGXI_CU1,
             "RecordType": record_type,
             "RecordLine": "江西联通",
@@ -2640,6 +2701,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_JIANGXI_CT1,
             "RecordType": record_type,
             "RecordLine": "江西电信",
@@ -2680,6 +2742,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_JIANGXI_CM1,
             "RecordType": record_type,
             "RecordLine": "江西移动",
@@ -2721,6 +2784,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_SICHUAN_CU1,
             "RecordType": record_type,
             "RecordLine": "四川联通",
@@ -2761,6 +2825,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_SICHUAN_CT1,
             "RecordType": record_type,
             "RecordLine": "四川电信",
@@ -2801,6 +2866,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_SICHUAN_CM1,
             "RecordType": record_type,
             "RecordLine": "四川移动",
@@ -2842,6 +2908,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_CHONGQING_CU1,
             "RecordType": record_type,
             "RecordLine": "重庆联通",
@@ -2882,6 +2949,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_CHONGQING_CT1,
             "RecordType": record_type,
             "RecordLine": "重庆电信",
@@ -2922,6 +2990,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_CHONGQING_CM1,
             "RecordType": record_type,
             "RecordLine": "重庆移动",
@@ -2963,6 +3032,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_GUIZHOU_CU1,
             "RecordType": record_type,
             "RecordLine": "贵州联通",
@@ -3003,6 +3073,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_GUIZHOU_CT1,
             "RecordType": record_type,
             "RecordLine": "贵州电信",
@@ -3043,6 +3114,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_GUIZHOU_CM1,
             "RecordType": record_type,
             "RecordLine": "贵州移动",
@@ -3084,6 +3156,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_YUNNAN_CU1,
             "RecordType": record_type,
             "RecordLine": "云南联通",
@@ -3124,6 +3197,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_YUNNAN_CT1,
             "RecordType": record_type,
             "RecordLine": "云南电信",
@@ -3164,6 +3238,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_YUNNAN_CM1,
             "RecordType": record_type,
             "RecordLine": "云南移动",
@@ -3205,6 +3280,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_XIZANG_CU1,
             "RecordType": record_type,
             "RecordLine": "西藏联通",
@@ -3245,6 +3321,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_XIZANG_CT1,
             "RecordType": record_type,
             "RecordLine": "西藏电信",
@@ -3285,6 +3362,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_XIZANG_CM1,
             "RecordType": record_type,
             "RecordLine": "西藏移动",
@@ -3326,6 +3404,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_SHAANXI_CU1,
             "RecordType": record_type,
             "RecordLine": "陕西联通",
@@ -3366,6 +3445,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_SHAANXI_CT1,
             "RecordType": record_type,
             "RecordLine": "陕西电信",
@@ -3406,6 +3486,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_SHAANXI_CM1,
             "RecordType": record_type,
             "RecordLine": "陕西移动",
@@ -3447,6 +3528,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_GANSU_CU1,
             "RecordType": record_type,
             "RecordLine": "甘肃联通",
@@ -3487,6 +3569,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_GANSU_CT1,
             "RecordType": record_type,
             "RecordLine": "甘肃电信",
@@ -3527,6 +3610,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_GANSU_CM1,
             "RecordType": record_type,
             "RecordLine": "甘肃移动",
@@ -3568,6 +3652,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_XINJIANG_CU1,
             "RecordType": record_type,
             "RecordLine": "新疆联通",
@@ -3608,6 +3693,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_XINJIANG_CT1,
             "RecordType": record_type,
             "RecordLine": "新疆电信",
@@ -3648,6 +3734,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_XINJIANG_CM1,
             "RecordType": record_type,
             "RecordLine": "新疆移动",
@@ -3689,6 +3776,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_QINGHAI_CU1,
             "RecordType": record_type,
             "RecordLine": "青海联通",
@@ -3729,6 +3817,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_QINGHAI_CT1,
             "RecordType": record_type,
             "RecordLine": "青海电信",
@@ -3769,6 +3858,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_QINGHAI_CM1,
             "RecordType": record_type,
             "RecordLine": "青海移动",
@@ -3810,6 +3900,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_NINGXIA_CU1,
             "RecordType": record_type,
             "RecordLine": "宁夏联通",
@@ -3850,6 +3941,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_NINGXIA_CT1,
             "RecordType": record_type,
             "RecordLine": "宁夏电信",
@@ -3890,6 +3982,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_NINGXIA_CM1,
             "RecordType": record_type,
             "RecordLine": "宁夏移动",
@@ -3930,6 +4023,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_EDU1,
             "RecordType": record_type,
             "RecordLine": "教育网",
@@ -3968,6 +4062,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_Default1,
             "RecordType": record_type,
             "RecordLine": "默认",
@@ -3983,6 +4078,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_Default2,
             "RecordType": record_type,
             "RecordLine": "默认",
@@ -3998,6 +4094,7 @@ if __name__ == '__main__':
         req = models.ModifyRecordRequest()
         params = {
             "Domain": domain,
+            "SubDomain": subdomain,
             "RecordId": RecordId_Default3,
             "RecordType": record_type,
             "RecordLine": "默认",
