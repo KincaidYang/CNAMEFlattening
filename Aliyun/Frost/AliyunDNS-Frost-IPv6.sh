@@ -1,4 +1,4 @@
-#! /bin/bash
+#!/bin/bash
 # 写入变量
 domain="r2wind.cn"
 sub_domain="@"
