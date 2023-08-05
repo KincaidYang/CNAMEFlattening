@@ -1,4 +1,4 @@
-module github.com/KincaidYang/CNAMEFlattening/DNSPod-Go
+module DNSPod-Go
 
 go 1.20
 
