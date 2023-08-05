@@ -17,7 +17,7 @@ export PATH=$PATH:/usr/local/go/bin
 更多安装说明可参考 https://go.dev，或自行搜索
 
 ### 导入记录
-使用前请参考[导入记录-Frost版本](https://r2wind.cn/articles/20230108.html)完成记录的导入,请注意，当前模板有三条默认记录，请删掉最后两条默认记录，保留第一条即可
+使用前请参考[导入记录-Frost版本](https://r2wind.cn/articles/20230108.html)完成记录的导入，请注意，当前模板有三条默认记录，请删掉最后两条默认记录，保留第一条即可
 
 ### 安装说明
 #### 克隆仓库到本地
