@@ -39,6 +39,8 @@ func main() {
 		"重庆联通", "重庆电信", "重庆移动", "四川联通", "四川电信", "四川移动", "贵州联通", "贵州电信", "贵州移动", "云南联通", "云南电信", "云南移动", "西藏联通", "西藏电信", "西藏移动",
 		// 西北地区
 		"陕西联通", "陕西电信", "陕西移动", "甘肃联通", "甘肃电信", "甘肃移动", "青海联通", "青海电信", "青海移动", "宁夏联通", "宁夏电信", "宁夏移动", "新疆联通", "新疆电信", "新疆移动",
+		// 默认
+		"默认",
 	}
 
 	dnsIPs := []string{
@@ -49,6 +51,7 @@ func main() {
 		DNS_GUANGDONG_CU, DNS_GUANGDONG_CT, DNS_GUANGDONG_CM, DNS_GUANGXI_CU, DNS_GUANGXI_CT, DNS_GUANGXI_CM, DNS_HAINAN_CU, DNS_HAINAN_CT, DNS_HAINAN_CM,
 		DNS_CHONGQING_CU, DNS_CHONGQING_CT, DNS_CHONGQING_CM, DNS_SICHUAN_CU, DNS_SICHUAN_CT, DNS_SICHUAN_CM, DNS_GUIZHOU_CU, DNS_GUIZHOU_CT, DNS_GUIZHOU_CM, DNS_YUNNAN_CU, DNS_YUNNAN_CT, DNS_YUNNAN_CM, DNS_XIZANG_CU, DNS_XIZANG_CT, DNS_XIZANG_CM,
 		DNS_SHAANXI_CU, DNS_SHAANXI_CT, DNS_SHAANXI_CM, DNS_GANSU_CU, DNS_GANSU_CT, DNS_GANSU_CM, DNS_QINGHAI_CU, DNS_QINGHAI_CT, DNS_QINGHAI_CM, DNS_NINGXIA_CU, DNS_NINGXIA_CT, DNS_NINGXIA_CM, DNS_XINJIANG_CU, DNS_XINJIANG_CT, DNS_XINJIANG_CM,
+		DNS_SHANGHAI_CT,
 	}
 
 	for i, recordLine := range recordLines {
