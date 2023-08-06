@@ -1,4 +1,4 @@
-// 本脚本调用了腾讯云HTTPDNS服务，可能会产生额外费用，如不想付费请使用Frost版本https://github.com/KincaidYang/CNAMEFlattening/tree/main/DNSPod-Go
+// 本脚本调用了腾讯云HTTPDNS服务，可能会产生额外费用，如不想付费请使用Frost版本https://github.com/KincaidYang/CNAMEFlattening/tree/main/DNSPod/Frost
 package main
 
 const (
