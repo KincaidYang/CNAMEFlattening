@@ -2,7 +2,7 @@
 # 本脚本基于腾讯云API，使用前请先安装SDK，pip install --upgrade tencentcloud-sdk-python
 # 使用脚本前请参照说明导入记录，以及修改配置参数
 import sys
-import requests,json,time
+import requests,json,time,ipaddress
 from multiprocessing.dummy import Pool
 from tencentcloud.common import credential
 from tencentcloud.common.profile.client_profile import ClientProfile
@@ -183,15 +183,25 @@ if __name__ == '__main__':
         except TencentCloudSDKException as err:
             print("获取报错:"+str(err))
 
+    # 判断是否ip地址
+    def is_ip(string_ip):
+        try:
+            ipaddress.ip_address(string_ip)
+            return True
+        except ValueError:
+            return False
+
     # 获取调度结果
     def get_AllocationResult(LocationAndNetName):
         CDN_Result = requests.get(DoH, params={'name':CDNCNAME, 'type':record_type, 'edns_client_subnet':DNSIP_List[LocationAndNetName]["ip"]})
-        # print(CDN_Result.text)
+        print(CDN_Result.text)
         # 解析返回结果
         result_Allocation = json.loads(CDN_Result.text)
         # 考虑到 CDN 存在多级CNAME，故从第二个data开始取值，保险起见仅取两值
-        print(result_Allocation['Answer'][1]['data'])
-        return result_Allocation['Answer'][1]['data']
+        for AnswerOne in result_Allocation['Answer']:
+            if is_ip(AnswerOne['data']):
+                return AnswerOne['data']
+        
     
     # 更新记录
     def update_Record(RecordId,RecordValue,RecordLine):
