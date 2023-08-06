@@ -2,6 +2,7 @@ import sys
 import requests
 import json
 import ipaddress
+from concurrent.futures import ThreadPoolExecutor
 from huaweicloudsdkcore.auth.credentials import BasicCredentials
 from huaweicloudsdkdns.v2.region.dns_region import DnsRegion
 from huaweicloudsdkcore.exceptions import exceptions
@@ -16,8 +17,8 @@ subdomain = 'ipv6'
 # CDN域名
 CDNCNAME = 'resources.r2wind.cn.cdn.dnsv1.com.cn'
 # AK/SK, 可以从 https://console.huaweicloud.com/iam/#/myCredential 获取
-ak = 'ZF5U*******LDNRLS'
-sk = 'PGDpq7z********rMKX6VTeLZ'
+ak = 'ZF5U********6LDNRLS'
+sk = 'PGDpq7zW7w********rMKX6VTeLZ'
 # DoH服务器地址，可根据需要选择是否替换
 DoH = 'https://dns.alidns.com/resolve'
 # 记录类型，IPv4为A，IPv6为AAAA
@@ -143,8 +144,8 @@ def extract_ip_from_doh_answer(answer):
     return None
 
 # 查询 DOH 接口获取 CDN 调度结果
-def query_doh_cdn_result(dns_server):
-    response = requests.get(DoH, params={'name': CDNCNAME, 'type': record_type, 'edns_client_subnet': dns_server})
+def query_doh_cdn_result(session, dns_server):
+    response = session.get(DoH, params={'name': CDNCNAME, 'type': record_type, 'edns_client_subnet': dns_server}, timeout=5)
     response_json = json.loads(response.text)
     return extract_ip_from_doh_answer(response_json['Answer'])
 
@@ -160,6 +161,30 @@ def update_record_sets(client, zone_id, line_id, recordset_id, cdn_result):
         print(response)
     except exceptions.ClientRequestException as e:
         print(e.status_code, e.request_id, e.error_code, e.error_msg)
+
+def process_dns_server(client, zone_id, line_id, dns_server):
+    session = requests.Session()
+    cdn_result = query_doh_cdn_result(session, dns_server)
+
+    try:
+        request = ShowRecordSetByZoneRequest()
+        request.zone_id = zone_id
+        request.line_id = line_id
+        request.status = "ACTIVE"
+        request.type = record_type
+        request.name = FQDN
+        resp_record_set_id = client.show_record_set_by_zone(request)
+        print(resp_record_set_id)
+    except exceptions.ClientRequestException as e:
+        print(e.status_code, e.request_id, e.error_code, e.error_msg)
+
+    result_record_set_id = json.dumps(resp_record_set_id.to_json_object())
+    result_record_set_id_json = json.loads(result_record_set_id)
+    record_set_id = result_record_set_id_json['recordsets'][0]['id']
+    print(record_set_id)
+
+    update_record_sets(client, zone_id, line_id, record_set_id, cdn_result)
+
 
 if __name__ == "__main__":
     credentials = BasicCredentials(ak, sk)
@@ -178,24 +203,6 @@ if __name__ == "__main__":
     result_ZONE_ID_json = json.loads(result_ZONE_ID)
     zone_id = result_ZONE_ID_json['zones'][0]['id']
 
-    for line_id, dns_server in DNS_SERVERS.items():
-        cdn_result = query_doh_cdn_result(dns_server)
-
-        try:
-            request = ShowRecordSetByZoneRequest()
-            request.zone_id = zone_id
-            request.line_id = line_id
-            request.status = "ACTIVE"
-            request.type = record_type
-            request.name = FQDN
-            resp_record_set_id = client.show_record_set_by_zone(request)
-            print(resp_record_set_id)
-        except exceptions.ClientRequestException as e:
-            print(e.status_code, e.request_id, e.error_code, e.error_msg)
-
-        result_record_set_id = json.dumps(resp_record_set_id.to_json_object())
-        result_record_set_id_json = json.loads(result_record_set_id)
-        record_set_id = result_record_set_id_json['recordsets'][0]['id']
-        print(record_set_id)
-
-        update_record_sets(client, zone_id, line_id, record_set_id, cdn_result)
+    with ThreadPoolExecutor() as executor:
+        for line_id, dns_server in DNS_SERVERS.items():
+            executor.submit(process_dns_server, client, zone_id, line_id, dns_server)
