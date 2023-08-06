@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"net"
 	"net/http"
+	"sync"
+	"time"
 
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
@@ -13,6 +15,8 @@ import (
 )
 
 func main() {
+	startTime := time.Now()
+
 	credential := common.NewCredential(
 		SecretId,
 		SecretKey,
@@ -53,9 +57,22 @@ func main() {
 		DNS_SHANGHAI_CT,
 	}
 
+	var wg sync.WaitGroup
+
 	for i, recordLine := range recordLines {
-		updateRecord(client, recordLine, dnsIPs[i])
+		wg.Add(1)
+		go func(recordLine string, dnsIP string) {
+			defer wg.Done()
+			updateRecord(client, recordLine, dnsIP)
+		}(recordLine, dnsIPs[i])
 	}
+
+	wg.Wait()
+
+	endTime := time.Now()
+	duration := endTime.Sub(startTime)
+
+	fmt.Printf("Finished updating record sets at %s. Total time: %s\n", endTime.Format("2006-01-02 15:04:05"), duration)
 }
 
 func updateRecord(client *dnspod.Client, recordLine, dnsIP string) {
@@ -93,14 +110,14 @@ func updateRecord(client *dnspod.Client, recordLine, dnsIP string) {
 
 	respModifyRecord, err := client.ModifyRecord(modifyRecordRequest)
 	if _, ok := err.(*errors.TencentCloudSDKError); ok {
-		fmt.Printf("An API error has returned: %s", err)
+		fmt.Printf("An API error has returned: %s , %s", err, respModifyRecord.ToJsonString())
 		return
 	}
 	if err != nil {
 		panic(err)
 	}
 
-	fmt.Printf("%s", respModifyRecord.ToJsonString())
+	fmt.Printf("Domain: %s, Subdomain: %s, RecordID: %d, RecordLine: %s, IP: %s\n", domain, subdomain, recordID, recordLine, ip)
 }
 
 func fetchIP(dnsIP string) (string, error) {
