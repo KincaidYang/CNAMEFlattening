@@ -45,6 +45,7 @@ func main() {
 		"陕西联通", "陕西电信", "陕西移动", "甘肃联通", "甘肃电信", "甘肃移动", "青海联通", "青海电信", "青海移动", "宁夏联通", "宁夏电信", "宁夏移动", "新疆联通", "新疆电信", "新疆移动",
 		// 默认
 		"默认",
+		// 如需覆盖更多线路请在此处继续添加，并在dnsIPs中添加 LocalDNS IP 所对应的变量名称
 	}
 
 	dnsIPs := []string{
@@ -56,6 +57,7 @@ func main() {
 		DNS_CHONGQING_CU, DNS_CHONGQING_CT, DNS_CHONGQING_CM, DNS_SICHUAN_CU, DNS_SICHUAN_CT, DNS_SICHUAN_CM, DNS_GUIZHOU_CU, DNS_GUIZHOU_CT, DNS_GUIZHOU_CM, DNS_YUNNAN_CU, DNS_YUNNAN_CT, DNS_YUNNAN_CM, DNS_XIZANG_CU, DNS_XIZANG_CT, DNS_XIZANG_CM,
 		DNS_SHAANXI_CU, DNS_SHAANXI_CT, DNS_SHAANXI_CM, DNS_GANSU_CU, DNS_GANSU_CT, DNS_GANSU_CM, DNS_QINGHAI_CU, DNS_QINGHAI_CT, DNS_QINGHAI_CM, DNS_NINGXIA_CU, DNS_NINGXIA_CT, DNS_NINGXIA_CM, DNS_XINJIANG_CU, DNS_XINJIANG_CT, DNS_XINJIANG_CM,
 		DNS_SHANGHAI_CT,
+		// 添加前请前往localdns.go中添加对应的变量
 	}
 
 	var wg sync.WaitGroup
