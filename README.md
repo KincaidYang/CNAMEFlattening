@@ -1,10 +1,14 @@
 # CNAMEFlattening
+## 版本说明
+本脚本支持 Python 和 Go 两种版本，其中Python版本支持华为云 DNS、阿里云 DNS 和DNSPod，Go 版本暂仅支持 DNSPod。
 ## 相关说明
-本脚本用以拉平 CNAME 记录，当前仅支持 DNSPod、华为云DNS。
+本脚本用以拉平 CNAME 记录，当前仅支持 DNSPod、华为云DNS、阿里云 DNS。
 
 DNSPod DNSPod DNS
 
-HuaweiCloud 华为云DNS
+HuaweiCloud 华为云 DNS
+
+Aliyun 阿里云 DNS
 
 请根据实际需要选择对应的脚本使用。
 
@@ -14,6 +18,6 @@ DNSPod：[使用 DNSPod 拉平 CNAME 记录（CDN 场景）](https://r2wind.cn/a
 
 华为云DNS：[使用华为云 DNS 拉平 CNAME 记录（CDN 场景）](https://r2wind.cn/articles/20230109.html)
 ## 脚本示意
-该示意为 DNSPod，Huaweicloud 流程类似
+该示意为 DNSPod Python版本，其他厂商和版本流程类似。
 
 ![流程图](https://github.com/KincaidYang/CNAMEFlattening/blob/main/static/DNSPodFlattening.png)
