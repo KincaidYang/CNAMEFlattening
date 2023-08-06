@@ -25,6 +25,10 @@ DoH='https://dns.alidns.com/resolve'
 record_type='AAAA'
 # ttl为解析记录生存时间，单位为秒，可自行修改
 TTL=120
+# Region ID, 可以从 https://developer.huaweicloud.com/endpoint 获取, 例如cn-north-4
+# 请注意请前往 https://console.huaweicloud.com/iam/ > 项目 中查看自己是否开通了对应的区域
+regionid = 'cn-north-4'
+
 # 使用各省运营商 DNSIP，以确保可以正常使用 ECS 协议调度
 # 东北
 DNS_LIAONING_CU='202.96.64.68'
@@ -146,7 +150,7 @@ if __name__ == "__main__":
 
     client = DnsClient.new_builder() \
         .with_credentials(credentials) \
-        .with_region(DnsRegion.value_of("cn-east-2")) \
+        .with_region(DnsRegion.value_of(regionid)) \
         .build()
 
     try:

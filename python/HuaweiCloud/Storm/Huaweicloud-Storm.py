@@ -16,14 +16,17 @@ subdomain = 'ipv6'
 # CDN域名
 CDNCNAME = 'resources.r2wind.cn.cdn.dnsv1.com.cn'
 # AK/SK, 可以从 https://console.huaweicloud.com/iam/#/myCredential 获取
-ak = 'ZF5*******O6LDNRLS'
-sk = 'PGD***********rMKX6VTeLZ'
+ak = 'ZF5U*******LDNRLS'
+sk = 'PGDpq7z********rMKX6VTeLZ'
 # DoH服务器地址，可根据需要选择是否替换
-DoH = 'https://1.12.12.12/resolve'
+DoH = 'https://dns.alidns.com/resolve'
 # 记录类型，IPv4为A，IPv6为AAAA
 record_type = 'AAAA'
 # TTL，单位为秒
 TTL = 120
+# Region ID, 可以从 https://developer.huaweicloud.com/endpoint 获取, 例如cn-north-4
+# 请注意请前往 https://console.huaweicloud.com/iam/ > 项目 中查看自己是否开通了对应的区域
+regionid = 'cn-north-4'
 
 if subdomain == '@':
     subdomain = ''
@@ -160,7 +163,7 @@ def update_record_sets(client, zone_id, line_id, recordset_id, cdn_result):
 
 if __name__ == "__main__":
     credentials = BasicCredentials(ak, sk)
-    client = DnsClient.new_builder().with_credentials(credentials).with_region(DnsRegion.value_of("cn-east-2")).build()
+    client = DnsClient.new_builder().with_credentials(credentials).with_region(DnsRegion.value_of(regionid)).build()
 
     try:
         request = ListPublicZonesRequest()
