@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net"
 	"net/http"
+	"sync"
 	"time"
 
 	"github.com/huaweicloud/huaweicloud-sdk-go-v3/core/auth/basic"
@@ -42,24 +43,33 @@ func main() {
 		return
 	}
 
+	var wg sync.WaitGroup
+
 	for lineID, dnsServer := range DNS_SERVERS {
-		cdnResult, err := fetchIP(DoH, CDNCNAME, recordType, dnsServer)
-		if err != nil {
-			fmt.Println("Error querying DOH CDN result:", err)
-			continue
-		}
+		wg.Add(1)
+		go func(lineID string, dnsServer string) {
+			defer wg.Done()
 
-		recordSetID, err := getRecordSetID(client, zoneID, lineID, recordType, FQDN)
-		if err != nil {
-			fmt.Println("Error getting record set ID:", err)
-			continue
-		}
+			cdnResult, err := fetchIP(DoH, CDNCNAME, recordType, dnsServer)
+			if err != nil {
+				fmt.Println("Error querying DOH CDN result:", err)
+				return
+			}
 
-		err = updateRecordSets(client, zoneID, recordSetID, cdnResult, TTL, recordType, FQDN)
-		if err != nil {
-			fmt.Println("Error updating record sets:", err)
-		}
+			recordSetID, err := getRecordSetID(client, zoneID, lineID, recordType, FQDN)
+			if err != nil {
+				fmt.Println("Error getting record set ID:", err)
+				return
+			}
+
+			err = updateRecordSets(client, zoneID, recordSetID, cdnResult, TTL, recordType, FQDN)
+			if err != nil {
+				fmt.Println("Error updating record sets:", err)
+			}
+		}(lineID, dnsServer)
 	}
+
+	wg.Wait()
 
 	endTime := time.Now()
 	duration := endTime.Sub(startTime)
@@ -157,5 +167,5 @@ func updateRecordSets(client *dns.DnsClient, zoneID, recordSetID, cdnResult stri
 		fmt.Printf("Updated record set %s (RecordSetID: %s) with CDN result %s\n", FQDN, recordSetID, cdnResult)
 	}
 
-	return nil
+	return err
 }
