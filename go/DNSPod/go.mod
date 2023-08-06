@@ -1,4 +1,4 @@
-module DNSPod-Go
+module DNSPod-CNAME-Flattening
 
 go 1.20
 
