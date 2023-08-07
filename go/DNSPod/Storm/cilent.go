@@ -170,7 +170,7 @@ func updateRecord(client *dnspod.Client, recordList []*dnspod.RecordListItem, re
 		return err
 	}
 
-	fmt.Printf("Domain: %s, Subdomain: %s, RecordID: %d, RecordLine: %s, IP: %s\n", domain, subdomain, recordID, recordLine, ip)
+	fmt.Printf("Upadate Record. Domain: %s, Subdomain: %s, RecordID: %d, RecordLine: %s, IP: %s\n", domain, subdomain, recordID, recordLine, ip)
 	return nil
 }
 
