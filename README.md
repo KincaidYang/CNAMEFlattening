@@ -1,6 +1,6 @@
 # CNAMEFlattening
 ## 版本说明
-本脚本支持 Python 和 Go 两种版本，其中Python版本支持华为云 DNS、阿里云 DNS 和DNSPod，Go 版本暂仅支持 DNSPod。
+本脚本支持 Python 和 Go 两种版本，其中Python版本支持华为云 DNS、阿里云 DNS 和DNSPod，Go 版本支持 DNSPod、华为云。
 ## 相关说明
 本脚本用以拉平 CNAME 记录，当前仅支持 DNSPod、华为云DNS、阿里云 DNS。
 
