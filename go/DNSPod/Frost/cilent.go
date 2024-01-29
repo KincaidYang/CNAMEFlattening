@@ -77,18 +77,31 @@ func main() {
 		// 添加前请前往localdns.go中添加对应的变量
 	}
 
+	recordList, err := fetchRecordList(client)
+	if err != nil {
+		panic(err)
+	}
 
 	var wg sync.WaitGroup
+	errChan := make(chan error, len(recordLines))
 
 	for i, recordLine := range recordLines {
 		wg.Add(1)
 		go func(recordLine string, dnsIP string) {
 			defer wg.Done()
-			updateRecord(client, recordLine, dnsIP)
+			err := updateRecord(client, recordList, recordLine, dnsIP)
+			errChan <- err
 		}(recordLine, dnsIPs[i])
 	}
 
 	wg.Wait()
+	close(errChan)
+
+	for err := range errChan {
+		if err != nil {
+			fmt.Printf("Error updating record: %v\n", err)
+		}
+	}
 
 	endTime := time.Now()
 	duration := endTime.Sub(startTime)
@@ -96,34 +109,53 @@ func main() {
 	fmt.Printf("Finished updating record sets at %s. Total time: %s\n", endTime.Format("2006-01-02 15:04:05"), duration)
 }
 
-func updateRecord(client *dnspod.Client, recordLine, dnsIP string) {
-	ip, err := fetchIP(dnsIP)
-	if err != nil {
-		panic(err)
-	}
-
-	request := dnspod.NewDescribeRecordListRequest()
-	request.Domain = common.StringPtr(domain)
-	request.Subdomain = common.StringPtr(subdomain)
-	request.RecordType = common.StringPtr(recordType)
-	request.RecordLine = common.StringPtr(recordLine)
-
-	respRecordId, err := client.DescribeRecordList(request)
+func fetchRecordList(client *dnspod.Client) ([]*dnspod.RecordListItem, error) {
+	describeRecordListRequest := dnspod.NewDescribeRecordListRequest()
+	describeRecordListRequest.Domain = common.StringPtr(domain)
+	describeRecordListRequest.Subdomain = common.StringPtr(subdomain)
+	describeRecordListRequest.Limit = common.Uint64Ptr(3000)
+	respRecordId, err := client.DescribeRecordList(describeRecordListRequest)
 	if _, ok := err.(*errors.TencentCloudSDKError); ok {
 		fmt.Printf("An API error has returned: %s", err)
-		return
+		return nil, err
 	}
 	if err != nil {
-		panic(err)
+		return nil, err
+	}
+	return respRecordId.Response.RecordList, nil
+}
+
+func updateRecord(client *dnspod.Client, recordList []*dnspod.RecordListItem, recordLine, dnsIP string) error {
+	ip, err := fetchIP(dnsIP)
+	if err != nil {
+		return err
 	}
 
-	recordList := respRecordId.Response.RecordList
-	recordID := *recordList[0].RecordId
+	var recordID uint64
+	var currentValue string
+	var currentTTL uint64
+	for _, record := range recordList {
+		if *record.Line == recordLine && *record.Type == recordType {
+			recordID = uint64(*record.RecordId)
+			currentValue = *record.Value
+			currentTTL = uint64(*record.TTL)
+			break
+		}
+	}
+
+	if recordID == 0 {
+		return fmt.Errorf("no matching record found for RecordLine: %s, RecordType: %s", recordLine, recordType)
+	}
+
+	if ip == currentValue && recordTTL == currentTTL {
+		fmt.Printf("Record values are the same, no update needed. Domain: %s, Subdomain: %s, RecordID: %d, RecordLine: %s, IP: %s\n", domain, subdomain, recordID, recordLine, ip)
+		return nil
+	}
 
 	modifyRecordRequest := dnspod.NewModifyRecordRequest()
 	modifyRecordRequest.Domain = common.StringPtr(domain)
 	modifyRecordRequest.SubDomain = common.StringPtr(subdomain)
-	modifyRecordRequest.RecordId = common.Uint64Ptr(uint64(recordID))
+	modifyRecordRequest.RecordId = common.Uint64Ptr(recordID)
 	modifyRecordRequest.RecordType = common.StringPtr(recordType)
 	modifyRecordRequest.RecordLine = common.StringPtr(recordLine)
 	modifyRecordRequest.Value = common.StringPtr(ip)
@@ -131,14 +163,14 @@ func updateRecord(client *dnspod.Client, recordLine, dnsIP string) {
 
 	respModifyRecord, err := client.ModifyRecord(modifyRecordRequest)
 	if _, ok := err.(*errors.TencentCloudSDKError); ok {
-		fmt.Printf("An API error has returned: %s , %s", err, respModifyRecord.ToJsonString())
-		return
+		return fmt.Errorf("an API error has returned: %v , %s", err, respModifyRecord.ToJsonString())
 	}
 	if err != nil {
-		panic(err)
+		return err
 	}
 
-	fmt.Printf("Domain: %s, Subdomain: %s, RecordID: %d, RecordLine: %s, IP: %s\n", domain, subdomain, recordID, recordLine, ip)
+	fmt.Printf("Upadate Record. Domain: %s, Subdomain: %s, RecordID: %d, RecordLine: %s, IP: %s\n", domain, subdomain, recordID, recordLine, ip)
+	return nil
 }
 
 func fetchIP(dnsIP string) (string, error) {
