@@ -9,8 +9,8 @@ Storm 版本使用 HTTPDNS 服务获取 CDN 调度 IP 结果，可能会产生�
 
 ```bash
 # Linux可参照此安装，更多版本请查看官方说明https://go.dev
-wget https://dl.google.com/go/go1.20.7.linux-amd64.tar.gz
-rm -rf /usr/local/go && tar -C /usr/local -xzf go1.20.7.linux-amd64.tar.gz
+wget https://dl.google.com/go/go1.24.5.linux-amd64.tar.gz
+rm -rf /usr/local/go && tar -C /usr/local -xzf go1.24.5.linux-amd64.tar.gz
 export PATH=$PATH:/usr/local/go/bin
 ```
 

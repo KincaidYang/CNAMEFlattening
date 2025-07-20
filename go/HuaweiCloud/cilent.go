@@ -17,15 +17,6 @@ import (
 func main() {
 	startTime := time.Now()
 
-	if subdomain == "@" {
-		subdomain = ""
-	}
-	subdomains := subdomain
-	if subdomain != "" {
-		subdomains = subdomain + "."
-	}
-	FQDN := subdomains + domain + "."
-
 	auth := basic.NewCredentialsBuilder().
 		WithAk(ak).
 		WithSk(sk).
@@ -37,44 +28,72 @@ func main() {
 			WithCredential(auth).
 			Build())
 
-	zoneID, err := getZoneID(client, domain)
-	if err != nil {
-		fmt.Println("Error getting zone ID:", err)
-		return
-	}
+	// 创建信号量来限制并发数量，避免超过华为云API的QPS限制
+	// 设置为10保持安全边际，如果华为云限制更低可以调整这个值
+	semaphore := make(chan struct{}, 10)
 
 	var wg sync.WaitGroup
 
-	for lineID, dnsServer := range DNS_SERVERS {
-		wg.Add(1)
-		go func(lineID string, dnsServer string) {
-			defer wg.Done()
+	// 处理每个域名配置
+	for _, config := range domainConfigs {
+		fmt.Printf("Processing domain: %s, subdomain: %s, record type: %s\n", config.Domain, config.Subdomain, config.RecordType)
 
-			cdnResult, err := fetchIP(DoH, CDNCNAME, recordType, dnsServer)
-			if err != nil {
-				fmt.Println("Error querying DOH CDN result:", err)
-				return
-			}
+		// 处理子域名格式
+		subdomain := config.Subdomain
+		if subdomain == "@" {
+			subdomain = ""
+		}
+		subdomains := subdomain
+		if subdomain != "" {
+			subdomains = subdomain + "."
+		}
+		FQDN := subdomains + config.Domain + "."
 
-			recordSetID, err := getRecordSetID(client, zoneID, lineID, recordType, FQDN)
-			if err != nil {
-				fmt.Println("Error getting record set ID:", err)
-				return
-			}
+		zoneID, err := getZoneID(client, config.Domain)
+		if err != nil {
+			fmt.Printf("Error getting zone ID for %s: %v\n", config.Domain, err)
+			continue
+		}
 
-			err = updateRecordSets(client, zoneID, recordSetID, cdnResult, TTL, recordType, FQDN)
-			if err != nil {
-				fmt.Println("Error updating record sets:", err)
-			}
-		}(lineID, dnsServer)
+		for lineID, dnsServer := range DNS_SERVERS {
+			wg.Add(1)
+			go func(lineID string, dnsServer string, cfg DomainConfig, fqdn string, zoneId string) {
+				defer wg.Done()
+
+				// 获取信号量
+				semaphore <- struct{}{}
+				defer func() {
+					// 释放信号量
+					<-semaphore
+				}()
+
+				cdnResult, err := fetchIP(DoH, cfg.CDNCNAME, cfg.RecordType, dnsServer)
+				if err != nil {
+					fmt.Printf("Error querying DOH CDN result for %s: %v\n", cfg.Domain, err)
+					return
+				}
+
+				recordSetID, err := getRecordSetID(client, zoneId, lineID, cfg.RecordType, fqdn)
+				if err != nil {
+					fmt.Printf("Error getting record set ID for %s: %v\n", cfg.Domain, err)
+					return
+				}
+
+				err = updateRecordSets(client, zoneId, recordSetID, cdnResult, cfg.TTL, cfg.RecordType, fqdn)
+				if err != nil {
+					fmt.Printf("Error updating record sets for %s: %v\n", cfg.Domain, err)
+				}
+			}(lineID, dnsServer, config, FQDN, zoneID)
+		}
 	}
 
+	// 等待所有任务完成
 	wg.Wait()
 
 	endTime := time.Now()
 	duration := endTime.Sub(startTime)
 
-	fmt.Printf("Finished updating record sets at %s. Total time: %s\n", endTime.Format("2006-01-02 15:04:05"), duration)
+	fmt.Printf("Finished updating all record sets at %s. Total time: %s\n", endTime.Format("2006-01-02 15:04:05"), duration)
 }
 
 func getZoneID(client *dns.DnsClient, domain string) (string, error) {

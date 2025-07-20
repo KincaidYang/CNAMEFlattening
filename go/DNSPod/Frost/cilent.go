@@ -77,39 +77,52 @@ func main() {
 		// 添加前请前往localdns.go中添加对应的变量
 	}
 
-	recordList, err := fetchRecordList(client)
-	if err != nil {
-		panic(err)
-	}
+	// 创建信号量来限制并发数量，避免超过DNSPod API的QPS限制
+	// DNSPod修改记录接口QPS限制为20，这里设置为15保持安全边际
+	semaphore := make(chan struct{}, 15)
 
 	var wg sync.WaitGroup
-	errChan := make(chan error, len(recordLines))
 
-	for i, recordLine := range recordLines {
-		wg.Add(1)
-		go func(recordLine string, dnsIP string) {
-			defer wg.Done()
-			err := updateRecord(client, recordList, recordLine, dnsIP)
-			errChan <- err
-		}(recordLine, dnsIPs[i])
-	}
+	// 处理每个域名配置
+	for _, config := range domainConfigs {
+		fmt.Printf("Processing domain: %s, subdomain: %s, record type: %s\n", config.Domain, config.Subdomain, config.RecordType)
 
-	wg.Wait()
-	close(errChan)
-
-	for err := range errChan {
+		recordList, err := fetchRecordList(client, config.Domain, config.Subdomain)
 		if err != nil {
-			fmt.Printf("Error updating record: %v\n", err)
+			fmt.Printf("Error fetching record list for %s: %v\n", config.Domain, err)
+			continue
+		}
+
+		for i, recordLine := range recordLines {
+			wg.Add(1)
+			go func(recordLine string, dnsIP string, cfg DomainConfig) {
+				defer wg.Done()
+
+				// 获取信号量
+				semaphore <- struct{}{}
+				defer func() {
+					// 释放信号量
+					<-semaphore
+				}()
+
+				err := updateRecord(client, recordList, recordLine, dnsIP, cfg)
+				if err != nil {
+					fmt.Printf("Error updating record: %v\n", err)
+				}
+			}(recordLine, dnsIPs[i], config)
 		}
 	}
+
+	// 等待所有任务完成
+	wg.Wait()
 
 	endTime := time.Now()
 	duration := endTime.Sub(startTime)
 
-	fmt.Printf("Finished updating record sets at %s. Total time: %s\n", endTime.Format("2006-01-02 15:04:05"), duration)
+	fmt.Printf("Finished updating all record sets at %s. Total time: %s\n", endTime.Format("2006-01-02 15:04:05"), duration)
 }
 
-func fetchRecordList(client *dnspod.Client) ([]*dnspod.RecordListItem, error) {
+func fetchRecordList(client *dnspod.Client, domain, subdomain string) ([]*dnspod.RecordListItem, error) {
 	describeRecordListRequest := dnspod.NewDescribeRecordListRequest()
 	describeRecordListRequest.Domain = common.StringPtr(domain)
 	describeRecordListRequest.Subdomain = common.StringPtr(subdomain)
@@ -125,8 +138,8 @@ func fetchRecordList(client *dnspod.Client) ([]*dnspod.RecordListItem, error) {
 	return respRecordId.Response.RecordList, nil
 }
 
-func updateRecord(client *dnspod.Client, recordList []*dnspod.RecordListItem, recordLine, dnsIP string) error {
-	ip, err := fetchIP(dnsIP)
+func updateRecord(client *dnspod.Client, recordList []*dnspod.RecordListItem, recordLine, dnsIP string, cfg DomainConfig) error {
+	ip, err := fetchIP(dnsIP, cfg.CDNCNAME, cfg.RecordType)
 	if err != nil {
 		return err
 	}
@@ -135,7 +148,7 @@ func updateRecord(client *dnspod.Client, recordList []*dnspod.RecordListItem, re
 	var currentValue string
 	var currentTTL uint64
 	for _, record := range recordList {
-		if *record.Line == recordLine && *record.Type == recordType {
+		if *record.Line == recordLine && *record.Type == cfg.RecordType {
 			recordID = uint64(*record.RecordId)
 			currentValue = *record.Value
 			currentTTL = uint64(*record.TTL)
@@ -144,22 +157,22 @@ func updateRecord(client *dnspod.Client, recordList []*dnspod.RecordListItem, re
 	}
 
 	if recordID == 0 {
-		return fmt.Errorf("no matching record found for RecordLine: %s, RecordType: %s", recordLine, recordType)
+		return fmt.Errorf("no matching record found for RecordLine: %s, RecordType: %s", recordLine, cfg.RecordType)
 	}
 
-	if ip == currentValue && recordTTL == currentTTL {
-		fmt.Printf("Record values are the same, no update needed. Domain: %s, Subdomain: %s, RecordID: %d, RecordLine: %s, IP: %s\n", domain, subdomain, recordID, recordLine, ip)
+	if ip == currentValue && cfg.RecordTTL == currentTTL {
+		fmt.Printf("Record values are the same, no update needed. Domain: %s, Subdomain: %s, RecordID: %d, RecordLine: %s, IP: %s\n", cfg.Domain, cfg.Subdomain, recordID, recordLine, ip)
 		return nil
 	}
 
 	modifyRecordRequest := dnspod.NewModifyRecordRequest()
-	modifyRecordRequest.Domain = common.StringPtr(domain)
-	modifyRecordRequest.SubDomain = common.StringPtr(subdomain)
+	modifyRecordRequest.Domain = common.StringPtr(cfg.Domain)
+	modifyRecordRequest.SubDomain = common.StringPtr(cfg.Subdomain)
 	modifyRecordRequest.RecordId = common.Uint64Ptr(recordID)
-	modifyRecordRequest.RecordType = common.StringPtr(recordType)
+	modifyRecordRequest.RecordType = common.StringPtr(cfg.RecordType)
 	modifyRecordRequest.RecordLine = common.StringPtr(recordLine)
 	modifyRecordRequest.Value = common.StringPtr(ip)
-	modifyRecordRequest.TTL = common.Uint64Ptr(recordTTL)
+	modifyRecordRequest.TTL = common.Uint64Ptr(cfg.RecordTTL)
 
 	respModifyRecord, err := client.ModifyRecord(modifyRecordRequest)
 	if _, ok := err.(*errors.TencentCloudSDKError); ok {
@@ -169,11 +182,11 @@ func updateRecord(client *dnspod.Client, recordList []*dnspod.RecordListItem, re
 		return err
 	}
 
-	fmt.Printf("Upadate Record. Domain: %s, Subdomain: %s, RecordID: %d, RecordLine: %s, IP: %s\n", domain, subdomain, recordID, recordLine, ip)
+	fmt.Printf("Upadate Record. Domain: %s, Subdomain: %s, RecordID: %d, RecordLine: %s, IP: %s\n", cfg.Domain, cfg.Subdomain, recordID, recordLine, ip)
 	return nil
 }
 
-func fetchIP(dnsIP string) (string, error) {
+func fetchIP(dnsIP, cdnCNAME, recordType string) (string, error) {
 	type Answer struct {
 		Data string `json:"data"`
 	}
@@ -182,7 +195,7 @@ func fetchIP(dnsIP string) (string, error) {
 		Answer []Answer `json:"Answer"`
 	}
 
-	resp, err := http.Get(fmt.Sprintf("%s?name=%s&type=%s&edns_client_subnet=%s", DoH, CDNCNAME, recordType, dnsIP))
+	resp, err := http.Get(fmt.Sprintf("%s?name=%s&type=%s&edns_client_subnet=%s", DoH, cdnCNAME, recordType, dnsIP))
 	if err != nil {
 		return "", err
 	}
